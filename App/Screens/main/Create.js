@@ -4,11 +4,14 @@ import {
   AllProducts,
   CreateTable,
   InsertProducts,
+  SingleProducts,
+  Update,
 } from "../../Operations/operationscalls";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-export default function Create() {
+export default function Create({ route }) {
+  const { id } = route?.params || "";
   const navigation = useNavigation();
   const [imageUri, setImageUri] = useState(null);
   const [data, setData] = useState({
@@ -57,21 +60,60 @@ export default function Create() {
   const handleSubmit = async () => {
     try {
       console.log(data);
-      const res = await InsertProducts(
-        data.name,
-        data.price,
-        data.desc,
-        imageUri,
-        data.username,
-        data.rating,
-        data.ingrients
-      );
+      if (!id) {
+        const res = await InsertProducts(
+          data.name,
+          data.price,
+          data.desc,
+          imageUri,
+          data.username,
+          data.rating,
+          data.ingrients
+        );
+      } else {
+        const res = await Update(
+          id,
+          data.name,
+          data.desc,
+          data.price,
+          imageUri,
+          data.ingrients,
+          data.rating,
+          data.username
+        );
+      }
 
-      navigation.navigate("home");
+      navigation.navigate("home", {
+        message: "back",
+      });
     } catch (error) {
       console.log(error);
     }
   };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await SingleProducts(id);
+        if (res.length > 0) {
+          const product = res[0];
+          console.log("pppp", product);
+          setData({
+            name: product.name,
+            desc: product.description,
+            price: String(product.price),
+            ingrients: product.ingredients,
+            rating: String(product.rating),
+            username: product.submitted_by,
+          });
+          setImageUri(product.image);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchData();
+  }, [id]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1 }}>
@@ -119,7 +161,13 @@ export default function Create() {
         {imageUri && (
           <Image
             source={{ uri: imageUri }}
-            style={{ width: 100, height: 100, marginTop: 10, marginBottom: 3 }}
+            style={{
+              width: 100,
+              height: 100,
+              marginTop: 10,
+              marginBottom: 3,
+              marginHorizontal: "auto",
+            }}
           />
         )}
         <View className="border-[0.9px] border-gray-400 mx-6 p-2 rounded-lg mb-3">

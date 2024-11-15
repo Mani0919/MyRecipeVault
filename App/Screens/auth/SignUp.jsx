@@ -5,6 +5,7 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,14 +32,37 @@ export default function SignUp() {
   const handleSubmit = async () => {
     try {
       console.log(userData);
-      const res = await InsertLoginUsers(
-        userData.username,
-        userData.name,
-        userData.email,
+      if (
+        userData.username &&
+        userData.name &&
+        userData.email &&
         userData.phone
-      );
-
-      navigation.navigate("login");
+      ) {
+        const res = await InsertLoginUsers(
+          userData.username,
+          userData.name,
+          userData.email,
+          userData.phone
+        );
+        navigation.navigate("login");
+      }
+      else{
+        Alert.alert("all feilds are reuired")
+      }
+      if (res) {
+        navigation.navigate("login");
+      } else {
+        if (
+          !userData.username ||
+          !userData.name ||
+          !userData.email ||
+          !userData.phone
+        ) {
+          Alert.alert("all are reuqired");
+        } else {
+          Alert.alert("Some issue ");
+        }
+      }
     } catch (error) {}
   };
 
@@ -126,8 +150,10 @@ export default function SignUp() {
             </View>
             <View className="text-center flex justify-center items-center gap-x-1 flex-row mt-3">
               <Text>Already have account ?</Text>
-              <TouchableOpacity onPress={()=>navigation.navigate("login")}>
-                <Text className="text-orange-500 font-bold text-[17px]">Login</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("login")}>
+                <Text className="text-orange-500 font-bold text-[17px]">
+                  Login
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

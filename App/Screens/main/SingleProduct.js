@@ -1,11 +1,18 @@
 import { View, Text, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SingleProducts } from "../../Operations/operationscalls";
+import {
+  DeleteSingleProduct,
+  DeleteSingleProducts,
+  SingleProducts,
+} from "../../Operations/operationscalls";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { useNavigation } from "@react-navigation/native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 const SingleProduct = ({ route }) => {
   const { id } = route.params;
   const [data, setData] = useState([]);
+  const navigation = useNavigation();
   useEffect(() => {
     async function fun() {
       try {
@@ -17,13 +24,21 @@ const SingleProduct = ({ route }) => {
     }
     fun();
   }, [id]);
+  const handleDelete = async (id) => {
+    try {
+      const res = await DeleteSingleProduct(id);
+      navigation.navigate("home");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <SafeAreaView>
       {data.map((item, index) => {
         return (
           <View
             key={index}
-            className="p-3 bg-white mx-3 rounded "
+            className="p-3 bg-white mx-3 rounded relative"
             style={{
               shadowColor: "#000",
               shadowOffset: { width: 0, height: 2 },
@@ -32,6 +47,17 @@ const SingleProduct = ({ route }) => {
               elevation: 10,
             }}
           >
+            <View className="flex flex-row justify-end p-2 gap-x-2">
+              <FontAwesome name="edit" size={24} color="black" onPress={()=>navigation.navigate("Create",{
+                id:item.id
+              })}/>
+              <AntDesign
+                name="delete"
+                size={24}
+                color="red"
+                onPress={() => handleDelete(item.id)}
+              />
+            </View>
             <View className="flex flex-row items-center gap-x-2">
               <Text className="text-[24px]">Receipe Name:</Text>
               <Text className="text-[20px]">{item.name}</Text>

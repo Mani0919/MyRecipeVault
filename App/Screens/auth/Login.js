@@ -19,15 +19,23 @@ export default function Login() {
       //   const all = await ALLLoginUsers();
       const res = await checkUserExists(userData.username, userData.email);
       if (res) {
+        console.log("res",res)
         console.log("Success");
         navigation.navigate("home");
       } else {
         console.log("fail");
-        Alert.alert("No User Found");
+        if (!userData.username && !userData.email) {
+          Alert.alert("username,email required");
+        } else if (!userData.username) {
+          Alert.alert("username required");
+        } else if (!userData.email) {
+          Alert.alert("email required");
+        } else {
+          Alert.alert("No User Found");
+        }
       }
       //   console.log("all", all);
     } catch (error) {
-      
       console.log(error);
     }
   };

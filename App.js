@@ -36,10 +36,11 @@ export default function App1() {
     fun();
   }, []);
   return (
-    // <SQLiteProvider>
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="home">
-        <Stack.Screen name="signup" component={SignUp} />
+      <Stack.Navigator >
+        <Stack.Screen name="signup" component={SignUp} options={{
+          headerShown:false
+        }}/>
         <Stack.Screen name="login" component={Login} options={{
           headerShown:false
         }}/>
@@ -50,6 +51,5 @@ export default function App1() {
         <Stack.Screen name="single" component={SingleProduct}/>
       </Stack.Navigator>
     </NavigationContainer>
-    // </SQLiteProvider>
   );
 }

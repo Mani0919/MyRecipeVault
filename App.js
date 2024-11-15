@@ -23,6 +23,9 @@ import Login from "./App/Screens/auth/Login";
 import Home from "./App/Screens/main/Home";
 import Create from "./App/Screens/main/Create";
 import SingleProduct from "./App/Screens/main/SingleProduct";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 const Stack = createNativeStackNavigator();
 export default function App1() {
   useEffect(() => {
@@ -35,21 +38,49 @@ export default function App1() {
     }
     fun();
   }, []);
+  const [loaded, error] = useFonts({
+    "Poppins-Bold": require("./App/assests/fonts/Poppins-Bold.ttf"),
+    "SourGummy-Bold": require("./App/assests/fonts/SourGummy-Bold.ttf"),
+    "EduAUVICWANTPre-Medium": require("./App/assests/fonts/EduAUVICWANTPre-Medium.ttf"),
+  });
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
   return (
-    <NavigationContainer>
-      <Stack.Navigator >
-        <Stack.Screen name="signup" component={SignUp} options={{
-          headerShown:false
-        }}/>
-        <Stack.Screen name="login" component={Login} options={{
-          headerShown:false
-        }}/>
-        <Stack.Screen name="home" component={Home} options={{
-          headerShown:false
-        }}/>
-        <Stack.Screen name="Create" component={Create}/>
-        <Stack.Screen name="single" component={SingleProduct}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="home">
+          <Stack.Screen
+            name="signup"
+            component={SignUp}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="login"
+            component={Login}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="home"
+            component={Home}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="Create" component={Create} />
+          <Stack.Screen name="single" component={SingleProduct} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }

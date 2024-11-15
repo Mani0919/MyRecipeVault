@@ -207,6 +207,24 @@ export default function Create({ route }) {
             }
           />
         </View>
+        {/* <View className="border-[0.9px] border-gray-400 mx-6 p-2 rounded-lg mb-3 ">
+          <TextInput
+            multiline={true}
+            numberOfLines={5}
+            placeholder="Enter your name"
+            value={data.username}
+            style={{
+              // height: 200,
+              textAlignVertical: "top",
+            }}
+            onChangeText={(text) =>
+              setData((prev) => ({
+                ...prev,
+                username: text,
+              }))
+            }
+          />
+        </View> */}
         <View className="mx-6">
           <Button title="Submit" onPress={handleSubmit} />
         </View>

@@ -120,6 +120,7 @@ export const DeleteSingleProduct = async (id) => {
         $id: id,
       });
       console.log("Product deleted successfully", res);
+      return res;
     } catch (error) {
       console.log("Execution error:", error);
     }

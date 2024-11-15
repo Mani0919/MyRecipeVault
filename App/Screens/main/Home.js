@@ -5,13 +5,25 @@ import {
   Image,
   ScrollView,
   Platform,
+  Alert,
+  Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
-import { AllProducts } from "../../Operations/operationscalls";
-
+import {
+  AllProducts,
+  DeleteSingleProduct,
+} from "../../Operations/operationscalls";
+import { StatusBar } from "expo-status-bar";
+import { PanGestureHandler, State } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedScrollHandler,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+const { width, height } = Dimensions.get("window");
 export default function Home({ route }) {
   const { message } = route?.params || "";
   const navigation = useNavigation();
@@ -32,11 +44,24 @@ export default function Home({ route }) {
       console.log(error);
     }
   }
+  const handleDelete = async (id) => {
+    try {
+      const res = await DeleteSingleProduct(id);
+      if (res) {
+        Alert.alert("Product deleted");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //drAG
+
   return (
     <ScrollView
       className="relative mt-16"
       contentContainerStyle={{ flexGrow: 1 }}
     >
+      <StatusBar backgroundColor="white" animated={true} />
       <View className="flex flex-row justify-end w-full px-3">
         {/* <TouchableOpacity className="bg-blue-600 p-2 px-10 rounded-md" onPress={refresh}>
         <Text className="text-white text-[20px]">Refresh Page</Text>
@@ -68,13 +93,8 @@ export default function Home({ route }) {
               >
                 <Image source={{ uri: item.image }} className="w-full h-44" />
                 <Text
-                  className="pl-2 text-[23px] font-bold pt-2"
-                  // style={{
-                  //   fontFamily:Platform.select({
-                  //     android: "Inter_900Black",
-                  //     ios: "Inter-Black",
-                  //   }),
-                  // }}
+                  className="pl-2 text-[20px] pt-2 "
+                  style={{ fontFamily: "SourGummy-Bold" }}
                 >
                   {item.name}
                 </Text>
@@ -85,7 +105,12 @@ export default function Home({ route }) {
                   ))}
                 </View>
                 <View className="flex flex-row items-center gap-x-1 p-1">
-                  <Text className="text-[20px] font-bold">Submitted By:</Text>
+                  <Text
+                    className="text-[15px] "
+                    style={{ fontFamily: "Poppins-Bold" }}
+                  >
+                    Submitted By:
+                  </Text>
                   <Text className="text-[16px]">{item.submitted_by}</Text>
                 </View>
               </TouchableOpacity>

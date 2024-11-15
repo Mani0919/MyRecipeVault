@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   DeleteSingleProduct,
@@ -27,7 +27,9 @@ const SingleProduct = ({ route }) => {
   const handleDelete = async (id) => {
     try {
       const res = await DeleteSingleProduct(id);
-      navigation.navigate("home");
+      navigation.navigate("home",{
+        message:"back"
+      });
     } catch (error) {
       console.log(error);
     }
@@ -48,38 +50,92 @@ const SingleProduct = ({ route }) => {
             }}
           >
             <View className="flex flex-row justify-end p-2 gap-x-2">
-              <FontAwesome name="edit" size={24} color="black" onPress={()=>navigation.navigate("Create",{
-                id:item.id
-              })}/>
+              <FontAwesome
+                name="edit"
+                size={24}
+                color="black"
+                onPress={() =>
+                  navigation.navigate("Create", {
+                    id: item.id,
+                  })
+                }
+              />
               <AntDesign
                 name="delete"
                 size={24}
                 color="red"
-                onPress={() => handleDelete(item.id)}
+                onPress={() =>
+                  Alert.alert(
+                    "Confirmation",
+                    "Are you sure you want to delete this product?",
+                    [
+                      {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                      },
+                      {
+                        text: "Delete",
+                        onPress: () => handleDelete(item.id),
+                        style: "destructive",
+                      },
+                    ]
+                  )
+                }
               />
             </View>
             <View className="flex flex-row items-center gap-x-2">
-              <Text className="text-[24px]">Receipe Name:</Text>
+              <Text
+                className="text-[20px]"
+                style={{ fontFamily: "SourGummy-Bold" }}
+              >
+                Receipe Name:
+              </Text>
               <Text className="text-[20px]">{item.name}</Text>
             </View>
             <View className="flex flex-row items-center gap-x-2">
-              <Text className="text-[24px]">Receipe Description:</Text>
+              <Text
+                className="text-[20px]"
+                style={{ fontFamily: "SourGummy-Bold" }}
+              >
+                Receipe Description:
+              </Text>
               <Text className="text-[20px]">{item.description}</Text>
             </View>
             <View className="flex flex-row items-center gap-x-2">
-              <Text className="text-[24px]">Price:</Text>
+              <Text
+                className="text-[20px]"
+                style={{ fontFamily: "SourGummy-Bold" }}
+              >
+                Price:
+              </Text>
               <Text className="text-[20px]">{item.price}</Text>
             </View>
             <View className="flex flex-col items-start gap-x-2">
-              <Text className="text-[24px]">Receipe Ingrients:</Text>
+              <Text
+                className="text-[20px]"
+                style={{ fontFamily: "SourGummy-Bold" }}
+              >
+                Receipe Ingrients:
+              </Text>
               <Text className="text-[20px]">{item.ingredients}</Text>
             </View>
             <View className="flex flex-row items-center gap-x-2">
-              <Text className="text-[24px]">Receipe Rating:</Text>
+              <Text
+                className="text-[20px]"
+                style={{ fontFamily: "SourGummy-Bold" }}
+              >
+                Receipe Rating:
+              </Text>
               <Text className="text-[20px]">{item.rating}</Text>
             </View>
             <View className="flex flex-row items-center gap-x-2">
-              <Text className="text-[24px]">Receipe Submited By:</Text>
+              <Text
+                className="text-[20px]"
+                style={{ fontFamily: "SourGummy-Bold" }}
+              >
+                Receipe Submited By:
+              </Text>
               <Text className="text-[20px]">{item.submitted_by}</Text>
             </View>
           </View>

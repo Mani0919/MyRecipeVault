@@ -5,7 +5,11 @@ module.exports = {
     "./App/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily:{
+        "Poppins-Regular":["Poppins-Regular"]
+      }
+    },
   },
   plugins: [],
 };
